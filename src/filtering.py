@@ -4,14 +4,17 @@ import imageio
 def brightness(img, scale):
     """ Change the brightness of img by scaling its pixel
     values uniformly by scale """
-    raise NotImplementedError
+    return img * scale
 
 
 def threshold(img, thresh):
     """ Threshold img such that the output is
     1 if the input is >= t, and 0 otherwise. """
-    raise NotImplementedError
+    out = np.zeros_like(img)
+    out[img >= thresh] = 1
+    return out
 
+    
 def mean_filter(img, filter_size):
     """ Apply a square spatial mean filter with side length filter_size
     to a grayscale img. Preconditions:
@@ -20,7 +23,7 @@ def mean_filter(img, filter_size):
     raise NotImplementedError
 
 def filter(img, filter):
-    """ Apply filter to img. Preconditions:
+    """ Apply filter to img using cross-correlation. Preconditions:
       - img is a grayscale (2d) float image
       - filter is square and has odd side length """
     raise NotImplementedError
