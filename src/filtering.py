@@ -20,10 +20,30 @@ def mean_filter(img, filter_size):
     to a grayscale img. Preconditions:
       - img is a grayscale (2d) float image
       - filter_size is odd """
-    raise NotImplementedError
+    H, W = img.shape
+    out = np.zeros_like(img)
+
+    hw = filter_size // 2 # half-width
+
+    in_pad = np.pad(img, ((hw, hw), (hw, hw)))
+    
+    for i in range(H):
+        for j in range(W):
+            total = 0.0
+            for ioff in range(-hw, hw+1):
+                for joff in range(-hw, hw+1):
+                    total += in_pad[hw + i+ioff, hw + j+joff]
+            out[i, j] = total / filter_size**2
+    return out
+    
 
 def filter(img, filter):
     """ Apply filter to img using cross-correlation. Preconditions:
       - img is a grayscale (2d) float image
       - filter is square and has odd side length """
-    raise NotImplementedError
+    raise NotImplementedException
+
+def convolve(img, filter):
+    """ Apply filter to img using cross-correlation. Preconditions:
+      - img is a grayscale (2d) float image
+      - filter is square and has odd side length """
