@@ -86,7 +86,7 @@ def down_2x(img):
     """ Downsample img by a factor of 2 in each dimension.
     Use prefiltering to avoid aliasing. 
     Pre: img is grayscale (2d) """
-    # todo: prevent aliasing
+    out = separable_filter(img, gauss1d5)
     return out[::2,::2]
 
 def down_4x(img):
@@ -109,7 +109,8 @@ def up_2x(img, interp="nn"):
         return out
         
     elif interp == "gaussian":
-        raise NotImplementedException # todo
+        out[::2,::2] = img
+        return separable_filter(out, gauss1d5) * 4
 
     elif interp == "linear":
         raise NotImplementedException # todo
