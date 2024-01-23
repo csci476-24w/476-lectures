@@ -58,12 +58,7 @@ def filter(img, kernel):
     
     for i in range(H):
         for j in range(W):
-            total = 0.0
-            for ioff in range(-hwi, hwi+1):
-                for joff in range(-hwj, hwj+1):
-                    weight = kernel[hwi + ioff, hwj+joff]
-                    total += weight * in_pad[hwi + i+ioff, hwj + j+joff]
-            out[i, j] = total
+            out[i,j] = (kernel * in_pad[hwi+i-hwi:hwi+i+hwi+1, hwj+j-hwj:hwj+j+hwj+1]).sum()
     return out
 
 def convolve(img, kernel):
