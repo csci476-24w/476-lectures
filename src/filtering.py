@@ -112,3 +112,21 @@ def up_2x(img, interp="nn"):
  
 def up_4x(img, interp="nn"):
     return up_2x(up_2x(img, interp=interp), interp=interp)
+
+
+def maximum_filter(img, filter_size):
+    """ Apply a square spatial maximum filter with side length filter_size
+    to a grayscale img. Preconditions:
+      - img is a grayscale (2d) float image
+      - filter_size is odd """
+    H, W = img.shape
+    out = np.zeros_like(img)
+
+    hw = filter_size // 2 # half-width
+
+    in_pad = np.pad(img, ((hw, hw), (hw, hw)))
+    
+    for i in range(H):
+        for j in range(W):
+            out[i,j] = in_pad[i:hw+i+hw+1, j:hw+j+hw+1].max()
+    return out
