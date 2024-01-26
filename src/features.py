@@ -6,7 +6,21 @@ from filtering import sobel_x, sobel_y, gauss1d5
 def harris_score(img):
     """ Returns the smaller eigenvalue of the structure tensor for each pixel in img.
     Pre: img is grayscale, float, [0,1]. Returns an array the same shape as img."""
+    dx = convolve(img, sobel_x)
+    dy = convolve(img, sobel_y)
+    A = separable_filter(dx * dx, gauss1d5)
+    B = separable_filter(dx * dy, gauss1d5)
+    C = separable_filter(dy * dy, gauss1d5)
+
+    det = A*C - B*B
+    tr = A+C
     
+    m = tr / 2
+    p = det
+    sqrtm2mp = np.sqrt(m**2 - p)
+    eig1 = m - sqrtm2mp
+    eig2 = m + sqrtm2mp
+    return np.minimum(eig1, eig2)
     # your code here!
 
 
@@ -34,7 +48,7 @@ def visualize_harris(img, i, j, topdown=True, window_halfwidth=3, error_surface_
     ## plot the image with a red box around the window
     fig = plt.gcf()
     fig.clf()
-    fig.set_size_inches(10, 10)
+    fig.set_size_inches(8, 8)
     
     plt.subplot(2, 2, 1, title="Window around the candidate feature point")
     plt.imshow(img, cmap='gray')
