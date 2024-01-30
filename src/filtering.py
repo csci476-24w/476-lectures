@@ -71,10 +71,14 @@ def separable_filter(img, kernel1d):
     """ Apply a filter kernel1d, then its transpose, to img.
     Precondition: kernel1d is symmetric. """
     return filter(filter(img, kernel1d), kernel1d.T)
-    
-def grad_mag(img):
+
+def grad(img):
     dx = convolve(img, sobel_x)
     dy = convolve(img, sobel_y)
+    return np.dstack((dx, dy))
+
+def grad_mag(img):
+
     return np.sqrt(dx ** 2 + dy ** 2)
 
 def down_2x(img):

@@ -2,6 +2,7 @@ import numpy as np
 import filtering
 from filtering import convolve, separable_filter
 from filtering import sobel_x, sobel_y, gauss1d5
+import geometry
 
 def harris_score(img):
     """ Returns the smaller eigenvalue of the structure tensor for each pixel in img.
@@ -23,6 +24,57 @@ def harris_score(img):
     return np.minimum(eig1, eig2)
     # your code here!
 
+def harris_corners(img, threshold):
+    scores = harris_score(img)
+    scores_maxfilter = filtering.maximum_filter(scores, 7)
+    features_mask = np.logical_and(scores > threshold, scores == scores_maxfilter)
+    return features_mask
+    # plt.figure(figsize=(10, 10))
+    # plt.imshow(features.overlay_features(img, features_mask))
+
+def get_harris_points(harris_mask):
+    i, j = np.nonzero(harris_mask)
+    return np.vstack((i, j))
+
+def extract_MOPS(img, point):
+    """ point is in (j, i) format so it can be treated as (x, y) with origin
+    in the top left """
+    # translate center patch to origin
+    y, x = point
+    tx1 = np.array([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]], dtype=np.float32)
+
+    # scale down by 1/8
+    scale = np.array([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]], dtype=np.float32)
+    
+    # rotate to gradient magnitude direction to 0
+    dx, dy = filtering.grad(img)[59, 32, :]
+    angle = np.arctan2(dy, dx)
+    rot = np.array([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]], dtype=np.float32)
+
+    # translate so a 5x5 patch has its corner at (0, 0)
+    tx2 = np.array([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]], dtype=np.float32)
+
+    # compose the transformations and warp the image into a 5x5 output image
+    M = tx1 # TODO - compose all the transformations
+    
+    desc = geometry.warp(img, M[:2,:], dsize=(5, 5))
+
+    # standardize intensity values
+    # TODO
+    return desc
+    
 
 ### messy visualization code - read at your own risk
 
