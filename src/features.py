@@ -42,32 +42,32 @@ def extract_MOPS(img, point):
     # translate center patch to origin
     y, x = point
     tx1 = np.array([
-        [1, 0, 0],
-        [0, 1, 0],
+        [1, 0, -x],
+        [0, 1, -y],
         [0, 0, 1]], dtype=np.float32)
 
     # scale down by 1/8
     scale = np.array([
-        [1, 0, 0],
-        [0, 1, 0],
+        [.125, 0, 0],
+        [0, .125, 0],
         [0, 0, 1]], dtype=np.float32)
     
     # rotate to gradient magnitude direction to 0
     dx, dy = filtering.grad(img)[59, 32, :]
     angle = np.arctan2(dy, dx)
     rot = np.array([
-        [1, 0, 0],
-        [0, 1, 0],
+        [np.cos(angle), np.sin(angle), 0],
+        [-np.sin(angle), np.cos(angle), 0],
         [0, 0, 1]], dtype=np.float32)
 
     # translate so a 5x5 patch has its corner at (0, 0)
     tx2 = np.array([
-        [1, 0, 0],
-        [0, 1, 0],
+        [1, 0, 2.5],
+        [0, 1, 2.5],
         [0, 0, 1]], dtype=np.float32)
 
     # compose the transformations and warp the image into a 5x5 output image
-    M = tx1 # TODO - compose all the transformations
+    M = tx2 @ rot @ scale @ tx1 # TODO - compose all the transformations
     
     desc = geometry.warp(img, M[:2,:], dsize=(5, 5))
 
