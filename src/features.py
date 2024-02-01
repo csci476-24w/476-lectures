@@ -50,11 +50,11 @@ def extract_MOPS(img, point):
         [0, 0, 1]], dtype=np.float32)
     
     # rotate to gradient magnitude direction to 0
-    dx, dy = filtering.grad(img)[59, 32, :]
+    dx, dy = filtering.grad(img)[y, x, :]
     angle = np.arctan2(dy, dx)
     rot = np.array([
-        [np.cos(angle), np.sin(angle), 0],
-        [-np.sin(angle), np.cos(angle), 0],
+        [ np.cos(-angle), np.sin(-angle), 0],
+        [-np.sin(-angle), np.cos(-angle), 0],
         [0, 0, 1]], dtype=np.float32)
 
     # translate so a 5x5 patch has its corner at (0, 0)
@@ -73,10 +73,29 @@ def extract_MOPS(img, point):
     return desc
     
 def ssd(f, g):
+    return np.sum((g - f)**2)
+
+def compute_distances(F1, F2):
+    """ Compute a table of distances between features in F1 and F2.
+    F1 is d by n1, F2 is d by n2, where d is the feature vector dimensionality.
+    Returns D, an n1 x n2 matrix where D[i, j] is the distance between feature
+    i in F1 and feature j in F2."""
     # TODO
     pass
 
-
+def get_matches(P1, P2, distances):
+    """ Get a list of correspondences between pairs of features.
+    P1 is n1 x 2, P2 is n2 x 2; these contain the (x, y) locations
+    of the features found in image 1 and image 2, respectively.
+    distances is a table of SSDs as returned by compute_distances.
+    Returns a list of 4-tuples representing corresponding
+    locations in image 1 and image 2, as in [
+        ((p1x, p1y, q1x, q1y)),
+        ((p2x, p2y, q2x, q2y)),
+        ...
+    ], where the p's are image 1 pixel coordinates and the q's are image 2"""
+    # TODO
+    pass
 
 
 ### messy visualization code - read at your own risk

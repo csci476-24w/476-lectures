@@ -12,3 +12,8 @@ def warp(img, tx, dsize=None, bottom_left_origin=True):
     M = np.zeros((2, 3))
     M[:txH,:txW] = tx
     return cv2.warpAffine(img, M, dsize)
+
+def estimate_translation(correspondences):
+    """ Returns a translation vector (tx, ty) that is the average
+    of the correspondences, given in the format as returned by
+    features.get_matches """
