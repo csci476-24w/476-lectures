@@ -22,15 +22,12 @@ def harris_score(img):
     eig1 = m - sqrtm2mp
     eig2 = m + sqrtm2mp
     return np.minimum(eig1, eig2)
-    # your code here!
 
 def harris_corners(img, threshold):
     scores = harris_score(img)
     scores_maxfilter = filtering.maximum_filter(scores, 7)
     features_mask = np.logical_and(scores > threshold, scores == scores_maxfilter)
     return features_mask
-    # plt.figure(figsize=(10, 10))
-    # plt.imshow(features.overlay_features(img, features_mask))
 
 def get_harris_points(harris_mask):
     i, j = np.nonzero(harris_mask)
@@ -71,10 +68,16 @@ def extract_MOPS(img, point):
     
     desc = geometry.warp(img, M[:2,:], dsize=(5, 5))
 
-    # standardize intensity values
-    # TODO
+    # TODO: standardize intensity values
+    
     return desc
     
+def ssd(f, g):
+    # TODO
+    pass
+
+
+
 
 ### messy visualization code - read at your own risk
 

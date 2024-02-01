@@ -134,3 +134,10 @@ def maximum_filter(img, filter_size):
         for j in range(W):
             out[i,j] = in_pad[i:hw+i+hw+1, j:hw+j+hw+1].max()
     return out
+
+def gaussian_pyramid(img, levels=4):
+    """ Return a Gaussian pyramid with `levels` levels as a list that begins
+    with the original img. Pre: img is grayscale"""
+    # TODO
+    pass
+    
