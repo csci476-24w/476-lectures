@@ -69,6 +69,8 @@ def extract_MOPS(img, point):
     desc = geometry.warp(img, M[:2,:], dsize=(5, 5))
 
     # TODO: standardize intensity values
+    desc -= desc.mean()
+    desc /= desc.std()
     
     return desc
     
