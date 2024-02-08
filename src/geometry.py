@@ -1,10 +1,10 @@
 import numpy as np
 import cv2
 
-def warp(img, tx, dsize=None, bottom_left_origin=True):
+def warp_cv(img, tx, dsize=None):
     """ Just for now, until we write our own:
-    warp img according to tx, a 2x2 matrix representing a geometric transformation.
-    Pre: tx is a 2x2 matrix"""
+    warp img according to tx, a matrix representing a geometric transformation.
+    Pre: tx is 3x3, 2x3, or 2x2"""
 
     H, W = img.shape[:2]
     txH, txW = tx.shape
@@ -12,6 +12,29 @@ def warp(img, tx, dsize=None, bottom_left_origin=True):
     M = np.zeros((2, 3))
     M[:txH,:txW] = tx
     return cv2.warpAffine(img, M, dsize)
+
+def warp(img, tx, dsize=None):
+    """ Warp img using tx, a matrix representing a geometric transformation.
+    Pre: tx is 3x3 (or some upper-left slice of a 3x3 matrix). img is grayscale."""
+    H, W = img.shape[:2]
+
+    # turn a 2x2 or 2x3 tx into a full 3x3 matrix
+    txH, txW = tx.shape
+    M = np.eye(3)
+    M[:txH,:txW] = tx
+
+    Minv = np.linalg.inv(M)
+    
+    if dsize is None:
+        DH, DW = (H, W)
+    else:
+        DH, DW = dsize[::-1]
+    out = np.zeros((DH, DW))
+
+    # your code here
+    
+    return out
+
 
 def estimate_translation(correspondences):
     """ Returns a translation vector (tx, ty) that is the average
