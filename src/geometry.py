@@ -15,7 +15,8 @@ def warp_cv(img, tx, dsize=None):
 
 def warp(img, tx, dsize=None):
     """ Warp img using tx, a matrix representing a geometric transformation.
-    Pre: tx is 3x3 (or some upper-left slice of a 3x3 matrix). img is grayscale."""
+    Pre: tx is 3x3 (or some upper-left slice of a 3x3 matrix). img is grayscale.
+    Returns: an output image of shape dsize with the warped img"""
     H, W = img.shape[:2]
 
     # turn a 2x2 or 2x3 tx into a full 3x3 matrix
@@ -23,8 +24,7 @@ def warp(img, tx, dsize=None):
     M = np.eye(3)
     M[:txH,:txW] = tx
 
-    Minv = np.linalg.inv(M)
-    
+    # set the output size to the input size if not specified
     if dsize is None:
         DH, DW = (H, W)
     else:
