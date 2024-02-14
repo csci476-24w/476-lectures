@@ -31,7 +31,14 @@ def warp(img, tx, dsize=None):
         DH, DW = dsize[::-1]
     out = np.zeros((DH, DW))
 
-    # your code here
+    Minv = np.linalg.inv(M)
+    for y in range(DH):
+        for x in range(DW):
+            xh, yh, wh = Minv @ [x, y, 1]
+            xsrc = round(xh/wh)
+            ysrc = round(yh/wh)
+            if (0 <= xsrc < W) and (0 <= ysrc < H):
+                out[y, x] = img[ysrc, xsrc]
     
     return out
 
