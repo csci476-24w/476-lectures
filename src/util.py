@@ -1,5 +1,11 @@
+import imageio
 import numpy as np
 import matplotlib.pyplot as plt
+import skimage as skim
+
+
+def imread_grayfloat(path):
+    return skim.color.rgb2gray(byte2float(imageio.imread(path)))
 
 def byte2float(img):
     """ Convert an image from bytes (0-255) to floats (0.0-1.0) """
