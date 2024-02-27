@@ -47,3 +47,24 @@ def estimate_translation(correspondences):
     """ Returns a translation vector (tx, ty) that is the average
     of the correspondences, given in the format as returned by
     features.get_matches """
+
+
+def cross(a, b):
+    """ Return the cross product of 3-vectors a and b. """
+    x1, y1, z1 = a
+    x2, y2, z2 = b
+    return np.array([
+        y1*z2 - z1*y2,
+        z1*x2 - x1*z2,
+        x1*y2 - y1*x2
+    ])
+
+def cross_matrix(a):
+    """ Return the 3x3 skew-symmetric matrix A such that
+    matrix multiplying A @ b yields cross(a, b) """
+    x, y, z = a
+    return np.array([
+        [ 0, -z,  y],
+        [ z,  0, -x],
+        [-y,  x,  0]
+    ])
