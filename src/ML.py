@@ -66,7 +66,7 @@ def plot_dataset(Xtr, ytr):
     cm_bright = ListedColormap(["#FF0000", "#0000FF"])
 
     # Train:
-    ax.scatter(Xtr[:, 0], Xtr[:, 1], c=ytr, cmap=cm_bright, edgecolors="k")
+    ax.scatter(Xtr[:, 0], Xtr[:, 1], alpha=0.5, c=ytr, cmap=cm_bright, edgecolors="k")
 
 
 def make_stripes(N, num_stripes, noise=0.01):
