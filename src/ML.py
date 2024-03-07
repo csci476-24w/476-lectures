@@ -9,28 +9,29 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 class MLP(nn.Module):
-    def __init__(self, in_channels):
+    def __init__(self, in_channels, out_channels):
         super().__init__()
-        
         self.layer1 = nn.Linear(in_channels, 128)
         self.layer2 = nn.Linear(128, 128)
-        self.layer3 = nn.Linear(128, 1)
+        self.layer3 = nn.Linear(128, out_channels)
         
 
     def forward(self, x):
+        if x.dim() > 2:
+            x = x.view(x.shape[0], -1)
         x = F.relu(self.layer1(x))
         x = F.relu(self.layer2(x))
         x = self.layer3(x)
         return x
 
 class MLP_N(nn.Module):
-    def __init__(self, in_channels, n_layers, hidden_size):
+    def __init__(self, in_channels, n_layers, hidden_size, out_channels):
         super().__init__()
         self.layers = nn.ModuleList()
         self.layers.append(nn.Linear(in_channels, hidden_size))
         for _ in range(n_layers-2):
             self.layers.append(nn.Linear(hidden_size, hidden_size))
-        self.layers.append(nn.Linear(hidden_size, 1))
+        self.layers.append(nn.Linear(hidden_size, out_channels))
 
     def forward(self, x):
         for layer in self.layers[:-1]:
